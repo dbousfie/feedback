@@ -26,18 +26,29 @@ serve(async (req: Request): Promise<Response> => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  let body: { query: string };
+  type RequestBody = {
+    course: string;
+    query: string;
+  }
+  let body: RequestBody;
+
   try {
     body = await req.json();
   } catch {
     return new Response("Invalid JSON", { status: 400 });
   }
 
+  if (!body.course || !body.query) {
+    return new Response("Missing course or query", { status: 400 });
+  }
+
   if (!AZURE_API_KEY) {
     return new Response("Missing Azure API key", { status: 500 });
   }
 
-  const syllabus = await Deno.readTextFile("syllabus.txt").catch(() =>
+  const syllabusFile = `${body.course}syllabus.md`;
+
+  const syllabus = await Deno.readTextFile(syllabusFile).catch(() =>
     "Error loading syllabus."
   );
 
@@ -49,7 +60,7 @@ serve(async (req: Request): Promise<Response> => {
     },
     {
       role: "system",
-      content: `Here is important context from syllabus.txt:\n${syllabus}`,
+      content: `Here is important context from syllabus for this course:\n${syllabus}`,
     },
     {
       role: "user",
