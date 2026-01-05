@@ -1,14 +1,11 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
-const AZURE_API_KEY = Deno.env.get("AZURE_OPENAI_KEY");
+const AZURE_API_KEY = Deno.env.get("AZURE_API_KEY");
+const AZURE_ENDPOINT = Deno.env.get("AZURE_ENDPOINT");
 const QUALTRICS_API_TOKEN = Deno.env.get("QUALTRICS_API_TOKEN");
 const QUALTRICS_SURVEY_ID = Deno.env.get("QUALTRICS_SURVEY_ID");
 const QUALTRICS_DATACENTER = Deno.env.get("QUALTRICS_DATACENTER");
 const SYLLABUS_LINK = Deno.env.get("SYLLABUS_LINK") || "";
-
-const AZURE_DEPLOYMENT_NAME = "gpt-4.1-mini";
-const AZURE_ENDPOINT = "https://chatbot-api-western.openai.azure.com";
-const AZURE_API_VERSION = "2024-04-01-preview";
 
 serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -52,6 +49,11 @@ serve(async (req: Request): Promise<Response> => {
     "Error loading syllabus."
   );
 
+  console.log(syllabusFile);
+  console.log(
+    `Loaded syllabus for ${body.course}, length = ${syllabus.length}`
+  );
+
   const messages = [
     {
       role: "system",
@@ -69,7 +71,7 @@ serve(async (req: Request): Promise<Response> => {
   ];
 
   const azureResponse = await fetch(
-    `${AZURE_ENDPOINT}/openai/deployments/${AZURE_DEPLOYMENT_NAME}/chat/completions?api-version=${AZURE_API_VERSION}`,
+    `${AZURE_ENDPOINT}`,
     {
       method: "POST",
       headers: {

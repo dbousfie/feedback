@@ -32,15 +32,19 @@ Create a copy using GitHub's "Use this template" function.
 
 Edit `syllabus.txt` to reflect your own paragraph marking rubric.
 
-### 3. Deploy the API Backend on Deno
+### 3. Set up Azure OpenAI api key
+Follow this tutorial https://www.youtube.com/watch?v=UB3q4OY3pPM
+Do not need to use Postman, simply know where to find the KEY and Endpoint. It will be used in next step.
+* Note: when finding API_KEY, make sure you select Azure OpenAI SDK in the rightmost dropdown on the Azure playground page as shown in the tutorial video.
+
+### 4. Deploy the API Backend on Deno
 
 * Go to [https://dash.deno.com](https://dash.deno.com)
 * Create a new project and set `main.ts` as the entry point
 * Configure environment variables:
 
 ```
-AZURE_OPENAI_KEY        = your Azure key
-oAZURE_DEPLOYMENT_NAME  = e.g., gpt-4.1-mini
+AZURE_API_KEY           = your Azure key
 AZURE_ENDPOINT          = your Azure endpoint URL
 SYLLABUS_LINK           = optional link to course page
 QUALTRICS_API_TOKEN     = optional
@@ -48,7 +52,7 @@ QUALTRICS_SURVEY_ID     = optional
 QUALTRICS_DATACENTER    = optional (e.g., uwo.eu)
 ```
 
-### 4. Host the Frontend Separately
+### 5. Host the Frontend Separately
 
 * Push `index.html` to a GitHub Pages repo or Netlify
 * In `index.html`, set the `fetch()` URL to your deployed Deno backend:
@@ -57,15 +61,15 @@ QUALTRICS_DATACENTER    = optional (e.g., uwo.eu)
 fetch("https://your-deno-project.deno.dev/", {
 ```
 
-### 5. Enable GitHub Pages (Optional)
+### 6. Enable GitHub Pages (Optional)
 
 Settings → Pages → Source = `main` branch → root
 
-### 6. (Optional) Embed in Brightspace
+### 7. (Optional) Embed in Brightspace
 
 Use `brightspace.html` with an iframe pointing to your hosted frontend.
 
-### 7. Qualtrics Logging Setup (Optional)
+### 8. Qualtrics Logging Setup (Optional)
 If using Qualtrics, make sure your survey contains embedded data fields:
 
 ```
