@@ -1,9 +1,9 @@
-<!-- index.html (updated, full file) -->
+<!-- index.html (full file, no hardcoded “essay/paragraph” — everything comes from syllabus + assessment files) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Evaluation summary</title>
+  <title>Feedback Mechanism</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Lato', sans-serif; margin: 2rem; min-height: 100vh; }
@@ -24,29 +24,35 @@
     }
     #response {
       white-space: pre-wrap; margin-top: 1rem; padding: 1rem;
-      background: #f4f4f4; border: 1px solid #ccc; max-width: 600px;
+      background: #f4f4f4; border: 1px solid #ccc; max-width: 900px;
     }
+    .muted { color: #666; font-size: 0.95rem; }
   </style>
 </head>
 <body>
-  <h2> Feedback Mechanism</h2>
+  <h2>Feedback Mechanism</h2>
 
   <div class="selector-row">
-    <label for="botMode"><strong>Select a course:</strong></label>
-    <select id="botMode"></select>
+    <label for="courseSelect"><strong>Select a course:</strong></label>
+    <select id="courseSelect"></select>
 
-    <label for="assessmentMode"><strong>Select an assessment:</strong></label>
-    <select id="assessmentMode"></select>
+    <label for="assessmentSelect"><strong>Select an assignment:</strong></label>
+    <select id="assessmentSelect"></select>
   </div>
 
   <p id="contentStatus" style="margin-top: 0.5rem; color: #4F2683;"></p>
+  <p class="muted">
+    This page sends only three things to the server: your comments, your submission text, and the selected syllabus + assignment file contents.
+    Nothing about “essay” or “paragraph” is hardcoded here.
+  </p>
+
   <hr />
 
   <form id="queryForm">
     <div class="input-group">
       <div class="input-box">
-        <label for="instructor">Reviewer Essay Comments:</label><br />
-        <textarea name="instructor" id="instructor" rows="4" cols="60" placeholder="Enter your comments here..."></textarea>
+        <label for="instructor">Reviewer Comments:</label><br />
+        <textarea id="instructor" rows="4" cols="60" placeholder="Enter your comments here..."></textarea>
       </div>
       <div class="sample-box">
         <label>Sample Feedback:</label>
@@ -56,16 +62,15 @@
 
     <div class="input-group">
       <div class="input-box">
-        <label for="essay">Essay for submission:</label><br />
-        <textarea name="essay" id="essay" rows="10" cols="60" placeholder="Paste the student essay here..."></textarea>
+        <label for="submission">Submission for review:</label><br />
+        <textarea id="submission" rows="10" cols="60" placeholder="Paste the student submission here..."></textarea>
       </div>
       <div class="sample-box">
-        <label>Sample Essay:</label>
-        <div class="sample-content" id="sampleEssay">Loading sample essay...</div>
+        <label>Sample Submission:</label>
+        <div class="sample-content" id="sampleSubmission">Loading sample submission...</div>
       </div>
     </div>
 
-    <p><em>All submissions and responses are stored with Qualtrics. NEVER include any personal identifiers.</em></p>
     <button type="submit">Submit</button>
   </form>
 
@@ -75,60 +80,48 @@
   <script>
     const form = document.getElementById("queryForm");
     const responseBox = document.getElementById("response");
-    const botMode = document.getElementById("botMode");
-    const assessmentMode = document.getElementById("assessmentMode");
+    const courseSelect = document.getElementById("courseSelect");
+    const assessmentSelect = document.getElementById("assessmentSelect");
     const contentStatus = document.getElementById("contentStatus");
 
     const contentConfig = {
       syllabiPath: "syllabi",
       assessmentsPath: "assessments",
       samplePath: "sample",
-      sampleEssayFile: "sample_essay.md",
+      sampleSubmissionFile: "sample_submission.md",
       sampleFeedbackFile: "sample_feedback.md",
     };
 
-    // IMPORTANT FIX:
-    // If you're not hosting on OWNER.github.io/REPO, inference often fails.
-    // This default makes the site work on any host without adding URL params.
+    // Works on any host. Change these if your repo name/owner changes.
     const DEFAULT_GITHUB = { owner: "dbousfie", repo: "feedback", branch: "main" };
 
     const inferGitHubConfig = () => {
       const params = new URLSearchParams(window.location.search);
-      const paramOwner = params.get("owner");
-      const paramRepo = params.get("repo");
-      const paramBranch = params.get("branch");
-
-      if (paramOwner && paramRepo) {
-        return { owner: paramOwner, repo: paramRepo, branch: paramBranch || "main" };
-      }
+      const owner = params.get("owner");
+      const repo = params.get("repo");
+      const branch = params.get("branch");
+      if (owner && repo) return { owner, repo, branch: branch || "main" };
 
       const host = window.location.hostname;
       const pathParts = window.location.pathname.split("/").filter(Boolean);
 
-      // Standard GitHub Pages pattern:
-      // https://OWNER.github.io/REPO/
+      // Pattern: https://OWNER.github.io/REPO/
       if (host.endsWith(".github.io")) {
-        const owner = host.replace(".github.io", "");
-        const repo = pathParts.length > 0 ? pathParts[0] : `${owner}.github.io`;
-        return { owner, repo, branch: "main" };
+        const inferredOwner = host.replace(".github.io", "");
+        const inferredRepo = pathParts.length > 0 ? pathParts[0] : `${inferredOwner}.github.io`;
+        return { owner: inferredOwner, repo: inferredRepo, branch: "main" };
       }
 
-      // Fallback for custom domains / other hosting
       return DEFAULT_GITHUB;
     };
 
-    const githubConfig = inferGitHubConfig();
-    const syllabusMap = new Map();
-    let assessmentFiles = [];
+    const github = inferGitHubConfig();
 
-    const setStatus = (message) => {
-      contentStatus.textContent = message;
-    };
+    const setStatus = (msg) => { contentStatus.textContent = msg; };
 
     const setSelectOptions = (select, options, placeholder) => {
       select.innerHTML = "";
-
-      if (options.length === 0) {
+      if (!options.length) {
         const opt = document.createElement("option");
         opt.value = "";
         opt.textContent = placeholder;
@@ -138,30 +131,14 @@
         select.disabled = true;
         return;
       }
-
       select.disabled = false;
-
-      options.forEach((o, idx) => {
+      options.forEach((o, i) => {
         const opt = document.createElement("option");
         opt.value = o.value;
         opt.textContent = o.label;
-        if (idx === 0) opt.selected = true;
+        if (i === 0) opt.selected = true;
         select.appendChild(opt);
       });
-    };
-
-    const fetchFolderContents = async (path) => {
-      const cacheBuster = Date.now();
-      const apiUrl =
-        `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}?ref=${githubConfig.branch}&cache=${cacheBuster}`;
-
-      const res = await fetch(apiUrl, { cache: "no-store" });
-      if (!res.ok) {
-        throw new Error(`Unable to load ${path} from GitHub (${githubConfig.owner}/${githubConfig.repo}@${githubConfig.branch}).`);
-      }
-
-      const data = await res.json();
-      return data.filter((item) => item.type === "file" && item.name.endsWith(".md"));
     };
 
     const fetchText = async (url) => {
@@ -170,9 +147,20 @@
       return res.text();
     };
 
+    const fetchFolderMarkdownFiles = async (path) => {
+      const cacheBuster = Date.now();
+      const apiUrl =
+        `https://api.github.com/repos/${github.owner}/${github.repo}/contents/${path}?ref=${github.branch}&cache=${cacheBuster}`;
+
+      const res = await fetch(apiUrl, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Cannot load ${path} from ${github.owner}/${github.repo} (${github.branch}).`);
+
+      const data = await res.json();
+      return data.filter((item) => item.type === "file" && item.name.endsWith(".md"));
+    };
+
     const loadTextInto = async (path, elementId, fallback) => {
       try {
-        // These are normal site files, not GitHub API. Example: ./sample/sample_essay.md
         const text = await fetchText(path);
         document.getElementById(elementId).textContent = text;
       } catch {
@@ -180,96 +168,102 @@
       }
     };
 
-    const loadSampleBoxes = () => {
+    const loadSamples = () => {
       loadTextInto(
         `./${contentConfig.samplePath}/${contentConfig.sampleFeedbackFile}`,
         "sampleFeedback",
         "Sample feedback not available."
       );
-
       loadTextInto(
-        `./${contentConfig.samplePath}/${contentConfig.sampleEssayFile}`,
-        "sampleEssay",
-        "Sample essay not available."
+        `./${contentConfig.samplePath}/${contentConfig.sampleSubmissionFile}`,
+        "sampleSubmission",
+        "Sample submission not available."
       );
     };
 
-    const loadContentOptions = async () => {
-      setStatus(`Loading from GitHub: ${githubConfig.owner}/${githubConfig.repo} (${githubConfig.branch})...`);
-      setSelectOptions(botMode, [], "Loading courses...");
-      setSelectOptions(assessmentMode, [], "Loading assessments...");
+    let syllabusUrlByCourse = new Map(); // courseCode -> download_url
+    let assessmentUrlByName = new Map(); // fileBaseName -> download_url
+
+    const loadOptions = async () => {
+      setStatus(`Loading from ${github.owner}/${github.repo} (${github.branch})...`);
+
+      setSelectOptions(courseSelect, [], "Loading courses...");
+      setSelectOptions(assessmentSelect, [], "Loading assignments...");
 
       const [syllabi, assessments] = await Promise.all([
-        fetchFolderContents(contentConfig.syllabiPath),
-        fetchFolderContents(contentConfig.assessmentsPath),
+        fetchFolderMarkdownFiles(contentConfig.syllabiPath),
+        fetchFolderMarkdownFiles(contentConfig.assessmentsPath),
       ]);
 
-      syllabusMap.clear();
-      const syllabusOptions = syllabi.map((item) => {
+      syllabusUrlByCourse = new Map();
+      const courseOptions = syllabi.map((item) => {
+        // expects: 3201syllabus.md
         const course = item.name.replace(/syllabus\.md$/i, "");
-        syllabusMap.set(course, item.download_url);
+        syllabusUrlByCourse.set(course, item.download_url);
         return { value: course, label: course };
       });
 
-      setSelectOptions(botMode, syllabusOptions, "No courses found.");
+      assessmentUrlByName = new Map();
+      const assessmentOptions = assessments.map((item) => {
+        // expects: 3201.md, media_analysis.md, etc.
+        const base = item.name.replace(/\.md$/i, "");
+        assessmentUrlByName.set(base, item.download_url);
+        return { value: base, label: base };
+      });
 
-      assessmentFiles = assessments.map((item) => ({
-        name: item.name,
-        downloadUrl: item.download_url,
-      }));
-
-      const assessmentOptions = assessmentFiles.map((item) => ({
-        value: item.downloadUrl,
-        label: item.name.replace(/\.md$/i, ""),
-      }));
-
-      setSelectOptions(assessmentMode, assessmentOptions, "No assessments found.");
+      setSelectOptions(courseSelect, courseOptions, "No courses found.");
+      setSelectOptions(assessmentSelect, assessmentOptions, "No assignments found.");
       setStatus("Loaded.");
     };
 
-    loadSampleBoxes();
-
-    loadContentOptions().catch((error) => {
-      setStatus(error.message);
-      responseBox.textContent = "Error loading course content.";
+    loadSamples();
+    loadOptions().catch((err) => {
+      setStatus(String(err.message || err));
+      responseBox.textContent = "Error loading files.";
     });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       responseBox.textContent = "Loading...";
 
-      const instructor = document.getElementById("instructor").value;
-      const essay = document.getElementById("essay").value;
+      const reviewerComments = document.getElementById("instructor").value || "";
+      const submissionText = document.getElementById("submission").value || "";
 
-      const course = botMode.value;
-      const syllabusUrl = syllabusMap.get(course);
-      const assessmentUrl = assessmentMode.value;
+      const course = courseSelect.value;
+      const assignmentKey = assessmentSelect.value;
 
-      const combinedQuery = `
-db2025
-The instructor’s in-text comments are authoritative and must guide all feedback. Do not override, soften, or generalize them.
-
-# Instructor Comments:
-${instructor}
-
-# Student Essay:
-${essay}
-
-Please provide structured feedback under the six db2025 categories. Feedback must be concise, evaluative, and written in the instructor’s voice.
-      `.trim();
+      const syllabusUrl = syllabusUrlByCourse.get(course);
+      const assessmentUrl = assessmentUrlByName.get(assignmentKey);
 
       try {
         const [syllabusContent, assessmentContent] = await Promise.all([
-          syllabusUrl ? fetchText(syllabusUrl) : Promise.resolve("No syllabus loaded."),
-          assessmentUrl ? fetchText(assessmentUrl) : Promise.resolve("No assessment selected."),
+          syllabusUrl ? fetchText(syllabusUrl) : Promise.resolve(""),
+          assessmentUrl ? fetchText(assessmentUrl) : Promise.resolve(""),
         ]);
+
+        // IMPORTANT: No “essay”, no “paragraph” hardcoded.
+        // The model is instructed to infer what it is from the assignment file.
+        const query = [
+          "db2025",
+          "",
+          "Use ONLY the syllabus and assignment text below to decide what kind of submission this is and how to evaluate it.",
+          "Do not assume it is an essay unless the assignment says it is an essay.",
+          "",
+          "Reviewer Comments (authoritative):",
+          reviewerComments,
+          "",
+          "Student Submission (as provided):",
+          submissionText,
+          "",
+          "Return structured feedback using the categories/rubric described in the assignment file. If the assignment file does not define categories, use the six db2025 categories.",
+        ].join("\n");
 
         const res = await fetch("https://essayfeedback-bot.deno.dev/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            query: combinedQuery,
             course,
+            query,
             syllabus: syllabusContent,
             assessment: assessmentContent,
           }),
