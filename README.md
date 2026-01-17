@@ -61,6 +61,20 @@ QUALTRICS_DATACENTER    = optional (e.g., uwo.eu)
 fetch("https://your-deno-project.deno.dev/", {
 ```
 
+## Editing Files in GitHub's Web Interface
+
+If you only use GitHub's web UI, these are the two files to edit:
+
+* `index.html` — the frontend (dropdowns, form, and GitHub content loading).
+* `main.ts` — the Deno backend entry point.
+
+To edit either file in the web UI:
+
+1. Open the file in your repo.
+2. Click the pencil icon (Edit this file).
+3. Paste your updated content.
+4. Commit changes.
+
 ### 6. Enable GitHub Pages (Optional)
 
 Settings → Pages → Source = `main` branch → root

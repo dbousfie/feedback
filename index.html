@@ -30,6 +30,13 @@
       font-size: 1.0rem;
       margin-left: 0.5rem;
     }
+    .selector-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
     .input-group {
       display: flex;
       gap: 2rem;
@@ -66,15 +73,13 @@
 </head>
 <body>
   <h2> Feedback Mechanism</h2>
-  <label for="botMode"><strong>Select a course:</strong></label>
-  <select id="botMode">
-    <option value="4212">4212</option>
-    <option value="4201">4201</option>
-    <option value="3390">3390</option>
-    <option value="3210">3210</option>
-    <option value="3510">3510</option>
-    <option value="3201">3201</option>
-  </select>
+  <div class="selector-row">
+    <label for="botMode"><strong>Select a course:</strong></label>
+    <select id="botMode"></select>
+    <label for="assessmentMode"><strong>Select an assessment:</strong></label>
+    <select id="assessmentMode"></select>
+  </div>
+  <p id="contentStatus" style="margin-top: 0.5rem; color: #4F2683;"></p>
   <hr />
   <form id="queryForm">
     <div class="input-group">
@@ -126,6 +131,135 @@
     const form = document.getElementById("queryForm");
     const responseBox = document.getElementById("response");
     const botMode = document.getElementById("botMode");
+    const assessmentMode = document.getElementById("assessmentMode");
+    const contentStatus = document.getElementById("contentStatus");
+
+    const contentConfig = {
+      syllabiPath: "syllabi",
+      assessmentsPath: "assessments",
+    };
+
+    const inferGitHubConfig = () => {
+      const params = new URLSearchParams(window.location.search);
+      const paramOwner = params.get("owner");
+      const paramRepo = params.get("repo");
+      const paramBranch = params.get("branch");
+      if (paramOwner && paramRepo) {
+        return { owner: paramOwner, repo: paramRepo, branch: paramBranch || "main" };
+      }
+
+      const host = window.location.hostname;
+      const pathParts = window.location.pathname.split("/").filter(Boolean);
+      if (host.endsWith(".github.io")) {
+        const owner = host.replace(".github.io", "");
+        const repo = pathParts.length > 0 ? pathParts[0] : `${owner}.github.io`;
+        return { owner, repo, branch: "main" };
+      }
+
+      return { owner: "", repo: "", branch: "main" };
+    };
+
+    const githubConfig = inferGitHubConfig();
+    const syllabusMap = new Map();
+    let assessmentFiles = [];
+
+    const setStatus = (message) => {
+      contentStatus.textContent = message;
+    };
+
+    const setSelectOptions = (select, options, placeholder) => {
+      select.innerHTML = "";
+      if (options.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = placeholder;
+        option.disabled = true;
+        option.selected = true;
+        select.appendChild(option);
+        select.disabled = true;
+        return;
+      }
+      select.disabled = false;
+      options.forEach((optionData, index) => {
+        const option = document.createElement("option");
+        option.value = optionData.value;
+        option.textContent = optionData.label;
+        if (index === 0) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    };
+
+    const fetchFolderContents = async (path) => {
+      if (!githubConfig.owner || !githubConfig.repo) {
+        throw new Error("Missing GitHub owner or repo. Provide ?owner=ORG&repo=REPO in the URL.");
+      }
+      const cacheBuster = Date.now();
+      const apiUrl = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}?ref=${githubConfig.branch}&cache=${cacheBuster}`;
+      const res = await fetch(apiUrl, { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`Unable to load ${path} from GitHub.`);
+      }
+      const data = await res.json();
+      return data.filter((item) => item.type === "file" && item.name.endsWith(".md"));
+    };
+
+    const fetchMarkdown = async (url, fallbackText) => {
+      if (!url) {
+        if (fallbackText !== undefined) {
+          return fallbackText;
+        }
+        throw new Error("Missing content file URL.");
+      }
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error("Unable to load selected content file.");
+      }
+      return res.text();
+    };
+
+    const loadContentOptions = async () => {
+      setStatus("Loading syllabus and assessment lists from GitHub...");
+      setSelectOptions(botMode, [], "Loading courses...");
+      setSelectOptions(assessmentMode, [], "Loading assessments...");
+      const [syllabi, assessments] = await Promise.all([
+        fetchFolderContents(contentConfig.syllabiPath),
+        fetchFolderContents(contentConfig.assessmentsPath),
+      ]);
+
+      syllabusMap.clear();
+      const syllabusOptions = syllabi.map((item) => {
+        const course = item.name.replace(/syllabus\.md$/i, "");
+        syllabusMap.set(course, item.download_url);
+        return { value: course, label: course };
+      });
+      setSelectOptions(botMode, syllabusOptions, "No courses found.");
+
+      assessmentFiles = assessments.map((item) => ({
+        name: item.name,
+        downloadUrl: item.download_url,
+      }));
+
+      updateAssessmentOptions();
+      setStatus("Content lists loaded.");
+    };
+
+    const updateAssessmentOptions = () => {
+      const assessmentOptions = assessmentFiles.map((item) => {
+        const label = item.name.replace(/\.md$/i, "");
+        return { value: item.downloadUrl, label };
+      });
+
+      setSelectOptions(assessmentMode, assessmentOptions, "No assessments found.");
+    };
+
+    botMode.addEventListener("change", updateAssessmentOptions);
+
+    loadContentOptions().catch((error) => {
+      setStatus(error.message);
+      responseBox.textContent = "Error loading course content. Check GitHub settings.";
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -133,6 +267,8 @@
 
       const instructor = document.getElementById("instructor").value;
       const essay = document.getElementById("essay").value;
+      const syllabusUrl = syllabusMap.get(botMode.value);
+      const assessmentUrl = assessmentMode.value;
 
       const combinedQuery = `
   db2025
@@ -148,12 +284,19 @@
       `.trim();
 
       try {
+        const [syllabusContent, assessmentContent] = await Promise.all([
+          fetchMarkdown(syllabusUrl),
+          fetchMarkdown(assessmentUrl, "No assessment selected."),
+        ]);
+
         const res = await fetch("https://essayfeedback-bot.deno.dev/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             query: combinedQuery,
             course: botMode.value,
+            syllabus: syllabusContent,
+            assessment: assessmentContent,
           }),
         });
 
