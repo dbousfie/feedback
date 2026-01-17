@@ -26,6 +26,8 @@ serve(async (req: Request): Promise<Response> => {
   type RequestBody = {
     course: string;
     query: string;
+    syllabus?: string;
+    assessment?: string;
   }
   let body: RequestBody;
 
@@ -43,11 +45,17 @@ serve(async (req: Request): Promise<Response> => {
     return new Response("Missing Azure API key", { status: 500 });
   }
 
-  const syllabusFile = `${body.course}syllabus.md`;
+  const syllabusFile = `syllabi/${body.course}syllabus.md`;
+  const assessmentFile = `assessments/${body.course}.md`;
 
-  const syllabus = await Deno.readTextFile(syllabusFile).catch(() =>
-    "Error loading syllabus."
-  );
+  const syllabus = body.syllabus ??
+    await Deno.readTextFile(syllabusFile).catch(() =>
+      "Error loading syllabus."
+    );
+  const assessment = body.assessment ??
+    await Deno.readTextFile(assessmentFile).catch(() =>
+      "Error loading assessment details."
+    );
 
   const messages = [
     {
@@ -58,6 +66,10 @@ serve(async (req: Request): Promise<Response> => {
     {
       role: "system",
       content: `Here is important context from syllabus for this course:\n${syllabus}`,
+    },
+    {
+      role: "system",
+      content: `Here are the assessment details for this course:\n${assessment}`,
     },
     {
       role: "user",
