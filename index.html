@@ -1,4 +1,4 @@
-<!-- index.html (fixed) -->
+<!-- index.html (updated, full file) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,10 +50,7 @@
       </div>
       <div class="sample-box">
         <label>Sample Feedback:</label>
-        <div class="sample-content">
-Excellent writing, strong clear engagement with the course readings.
-Very well argued paper with lots of examples and a close reading of the text.
-        </div>
+        <div class="sample-content" id="sampleFeedback">Loading sample feedback...</div>
       </div>
     </div>
 
@@ -64,10 +61,7 @@ Very well argued paper with lots of examples and a close reading of the text.
       </div>
       <div class="sample-box">
         <label>Sample Essay:</label>
-        <div class="sample-content">
-Introduction
-Paste a sample essay here if you want; this text is only a placeholder.
-        </div>
+        <div class="sample-content" id="sampleEssay">Loading sample essay...</div>
       </div>
     </div>
 
@@ -88,10 +82,14 @@ Paste a sample essay here if you want; this text is only a placeholder.
     const contentConfig = {
       syllabiPath: "syllabi",
       assessmentsPath: "assessments",
+      samplePath: "sample",
+      sampleEssayFile: "sample_essay.md",
+      sampleFeedbackFile: "sample_feedback.md",
     };
 
-    // FIX: Always have a working default for web hosting that is NOT *.github.io (custom domain, etc.)
-    // You can still override via URL: ?owner=ORG&repo=REPO&branch=BRANCH
+    // IMPORTANT FIX:
+    // If you're not hosting on OWNER.github.io/REPO, inference often fails.
+    // This default makes the site work on any host without adding URL params.
     const DEFAULT_GITHUB = { owner: "dbousfie", repo: "feedback", branch: "main" };
 
     const inferGitHubConfig = () => {
@@ -99,6 +97,7 @@ Paste a sample essay here if you want; this text is only a placeholder.
       const paramOwner = params.get("owner");
       const paramRepo = params.get("repo");
       const paramBranch = params.get("branch");
+
       if (paramOwner && paramRepo) {
         return { owner: paramOwner, repo: paramRepo, branch: paramBranch || "main" };
       }
@@ -106,14 +105,15 @@ Paste a sample essay here if you want; this text is only a placeholder.
       const host = window.location.hostname;
       const pathParts = window.location.pathname.split("/").filter(Boolean);
 
-      // Standard GitHub Pages pattern: https://OWNER.github.io/REPO/
+      // Standard GitHub Pages pattern:
+      // https://OWNER.github.io/REPO/
       if (host.endsWith(".github.io")) {
         const owner = host.replace(".github.io", "");
         const repo = pathParts.length > 0 ? pathParts[0] : `${owner}.github.io`;
         return { owner, repo, branch: "main" };
       }
 
-      // FIX: fallback for custom domain / other hosting
+      // Fallback for custom domains / other hosting
       return DEFAULT_GITHUB;
     };
 
@@ -121,27 +121,32 @@ Paste a sample essay here if you want; this text is only a placeholder.
     const syllabusMap = new Map();
     let assessmentFiles = [];
 
-    const setStatus = (message) => { contentStatus.textContent = message; };
+    const setStatus = (message) => {
+      contentStatus.textContent = message;
+    };
 
     const setSelectOptions = (select, options, placeholder) => {
       select.innerHTML = "";
+
       if (options.length === 0) {
-        const option = document.createElement("option");
-        option.value = "";
-        option.textContent = placeholder;
-        option.disabled = true;
-        option.selected = true;
-        select.appendChild(option);
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = placeholder;
+        opt.disabled = true;
+        opt.selected = true;
+        select.appendChild(opt);
         select.disabled = true;
         return;
       }
+
       select.disabled = false;
-      options.forEach((optionData, index) => {
-        const option = document.createElement("option");
-        option.value = optionData.value;
-        option.textContent = optionData.label;
-        if (index === 0) option.selected = true;
-        select.appendChild(option);
+
+      options.forEach((o, idx) => {
+        const opt = document.createElement("option");
+        opt.value = o.value;
+        opt.textContent = o.label;
+        if (idx === 0) opt.selected = true;
+        select.appendChild(opt);
       });
     };
 
@@ -149,19 +154,44 @@ Paste a sample essay here if you want; this text is only a placeholder.
       const cacheBuster = Date.now();
       const apiUrl =
         `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}?ref=${githubConfig.branch}&cache=${cacheBuster}`;
+
       const res = await fetch(apiUrl, { cache: "no-store" });
       if (!res.ok) {
         throw new Error(`Unable to load ${path} from GitHub (${githubConfig.owner}/${githubConfig.repo}@${githubConfig.branch}).`);
       }
+
       const data = await res.json();
       return data.filter((item) => item.type === "file" && item.name.endsWith(".md"));
     };
 
-    const fetchMarkdown = async (url, fallbackText) => {
-      if (!url) return fallbackText !== undefined ? fallbackText : "";
+    const fetchText = async (url) => {
       const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error("Unable to load selected content file.");
+      if (!res.ok) throw new Error("fetch failed");
       return res.text();
+    };
+
+    const loadTextInto = async (path, elementId, fallback) => {
+      try {
+        // These are normal site files, not GitHub API. Example: ./sample/sample_essay.md
+        const text = await fetchText(path);
+        document.getElementById(elementId).textContent = text;
+      } catch {
+        document.getElementById(elementId).textContent = fallback;
+      }
+    };
+
+    const loadSampleBoxes = () => {
+      loadTextInto(
+        `./${contentConfig.samplePath}/${contentConfig.sampleFeedbackFile}`,
+        "sampleFeedback",
+        "Sample feedback not available."
+      );
+
+      loadTextInto(
+        `./${contentConfig.samplePath}/${contentConfig.sampleEssayFile}`,
+        "sampleEssay",
+        "Sample essay not available."
+      );
     };
 
     const loadContentOptions = async () => {
@@ -180,6 +210,7 @@ Paste a sample essay here if you want; this text is only a placeholder.
         syllabusMap.set(course, item.download_url);
         return { value: course, label: course };
       });
+
       setSelectOptions(botMode, syllabusOptions, "No courses found.");
 
       assessmentFiles = assessments.map((item) => ({
@@ -191,10 +222,12 @@ Paste a sample essay here if you want; this text is only a placeholder.
         value: item.downloadUrl,
         label: item.name.replace(/\.md$/i, ""),
       }));
-      setSelectOptions(assessmentMode, assessmentOptions, "No assessments found.");
 
+      setSelectOptions(assessmentMode, assessmentOptions, "No assessments found.");
       setStatus("Loaded.");
     };
+
+    loadSampleBoxes();
 
     loadContentOptions().catch((error) => {
       setStatus(error.message);
@@ -207,7 +240,9 @@ Paste a sample essay here if you want; this text is only a placeholder.
 
       const instructor = document.getElementById("instructor").value;
       const essay = document.getElementById("essay").value;
-      const syllabusUrl = syllabusMap.get(botMode.value);
+
+      const course = botMode.value;
+      const syllabusUrl = syllabusMap.get(course);
       const assessmentUrl = assessmentMode.value;
 
       const combinedQuery = `
@@ -225,8 +260,8 @@ Please provide structured feedback under the six db2025 categories. Feedback mus
 
       try {
         const [syllabusContent, assessmentContent] = await Promise.all([
-          fetchMarkdown(syllabusUrl, "No syllabus loaded."),
-          fetchMarkdown(assessmentUrl, "No assessment selected."),
+          syllabusUrl ? fetchText(syllabusUrl) : Promise.resolve("No syllabus loaded."),
+          assessmentUrl ? fetchText(assessmentUrl) : Promise.resolve("No assessment selected."),
         ]);
 
         const res = await fetch("https://essayfeedback-bot.deno.dev/", {
@@ -234,7 +269,7 @@ Please provide structured feedback under the six db2025 categories. Feedback mus
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             query: combinedQuery,
-            course: botMode.value,
+            course,
             syllabus: syllabusContent,
             assessment: assessmentContent,
           }),
@@ -242,7 +277,7 @@ Please provide structured feedback under the six db2025 categories. Feedback mus
 
         const text = await res.text();
         responseBox.textContent = text;
-      } catch (err) {
+      } catch {
         responseBox.textContent = "Error contacting server.";
       }
     });
