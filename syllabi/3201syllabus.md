@@ -42,7 +42,7 @@ Turtle Island (North America).
 +------------------+---------------------------------------------------+
 | **Instructor**   | Dan Bousfield                                     |
 +------------------+---------------------------------------------------+
-| **Office Hours   | Wednesday 11:00am-01:00pm via zoom - link in      |
+| **Office Hours   | Wednesday 11:00am-01:00pm and Thursday 1:00-2:20pm  via zoom - link in      |
 | via zoom**       | Brightspace                                       |
 +------------------+---------------------------------------------------+
 | **Email:**       | dbousfie@uwo.ca                                   |
@@ -1389,3 +1389,29 @@ Instruction](https://www.uwo.ca/univsec/pdf/academic_policies/registration_progr
     <https://web.archive.org/web/20210413194856/https://studentlife.oregonstate.edu/childcare/family-friendly-syllabi-examples>
 
 [^2]: From U-M Faculty Member Alisse Portnoy, English.
+
+Student questions:
+Q: where do I get the debate topics? 
+A: they are icj cases from the case notes legal brief
+
+Q: what do I have to do to get the 15% each week?
+A: the group work which is linked on the Google sheet, and the quiz that is available under assignments in brightspace
+
+Q: can I do the debate solo?
+A: yes, but it limits your ability to demonstrate you can work well with peers if you need a reference letter
+
+Q: if I'm doing option one what do I have to do each week?
+A: just the quiz in brightspace and the group work linked on the Google sheet
+
+Q: if I'm doing option two or three what do I have to do each week?
+A: option 2 and 3, require the quiz in brightspace, the group work each week, as well as a 250 word written response uploaded into brightspace under 'assignments' by Monday at 11:59 p.m.
+
+Q: does the group work have to be completed in class?
+A: the group work can be completed anytime during the week but must be submitted by Monday at 11:59 p.m.
+
+Q: What are the CELs offered this semester?
+A: we do not currently know if we have any CEL placements, Dan will update everyone as soon as he knows
+
+
+
+
