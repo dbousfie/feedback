@@ -1,11 +1,13 @@
-// main.ts (updated, full file)
+// main.ts (full file, accepts syllabus + assignment text from the page; no hardcoded “essay/paragraph”)
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
 const AZURE_API_KEY = Deno.env.get("AZURE_API_KEY");
 const AZURE_ENDPOINT = Deno.env.get("AZURE_ENDPOINT");
+
 const QUALTRICS_API_TOKEN = Deno.env.get("QUALTRICS_API_TOKEN");
 const QUALTRICS_SURVEY_ID = Deno.env.get("QUALTRICS_SURVEY_ID");
 const QUALTRICS_DATACENTER = Deno.env.get("QUALTRICS_DATACENTER");
+
 const SYLLABUS_LINK = Deno.env.get("SYLLABUS_LINK") || "";
 
 type RequestBody = {
@@ -46,39 +48,34 @@ serve(async (req: Request): Promise<Response> => {
     return new Response("Missing Azure configuration", { status: 500 });
   }
 
-  // Syllabus: accept from browser if provided; else try to read local file
+  // Prefer text provided by the web page. If missing, try local files.
   const syllabusFile = `syllabi/${body.course}syllabus.md`;
   const syllabus =
     body.syllabus ??
-    (await Deno.readTextFile(syllabusFile).catch(() => "Error loading syllabus."));
+    (await Deno.readTextFile(syllabusFile).catch(() => ""));
 
-  // Assessment: DO NOT force a local file lookup.
-  // The browser sends the assessment content as text.
+  // Assignment text should come from the web page. Do not force a local path.
   const assessment = body.assessment ?? "";
 
   const messages: Array<{ role: string; content: string }> = [
     {
       role: "system",
       content:
-        "You are a helpful assistant. Provide concise, structured feedback. Do not invent course policies.",
+        "You are an evaluator. Follow the assignment instructions exactly. Do not invent requirements.",
     },
     {
       role: "system",
-      content: `Syllabus context:\n${syllabus}`,
+      content: `Syllabus:\n${syllabus || "[No syllabus text provided]"}`,
+    },
+    {
+      role: "system",
+      content: `Assignment:\n${assessment || "[No assignment text provided]"}`,
+    },
+    {
+      role: "user",
+      content: body.query,
     },
   ];
-
-  if (assessment && assessment.trim().length > 0) {
-    messages.push({
-      role: "system",
-      content: `Assessment context:\n${assessment}`,
-    });
-  }
-
-  messages.push({
-    role: "user",
-    content: body.query,
-  });
 
   const azureResponse = await fetch(AZURE_ENDPOINT, {
     method: "POST",
@@ -91,7 +88,7 @@ serve(async (req: Request): Promise<Response> => {
 
   const azureJson = await azureResponse.json();
   const baseResponse =
-    azureJson?.choices?.[0]?.message?.content || "No response from Azure OpenAI";
+    azureJson?.choices?.[0]?.message?.content || "No response from model";
 
   const result =
     `${baseResponse}\n\nThere may be errors in my responses; always refer to the course web page: ${SYLLABUS_LINK}`;
