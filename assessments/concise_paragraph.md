@@ -1,4 +1,4 @@
-📘 Feedback Instruction Set (for ChatGPT-4.0 Mini)
+📘 Feedback Instruction Set 
 General Rules
 
 Write directly to the student in the second person.
