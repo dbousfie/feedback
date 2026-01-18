@@ -263,7 +263,7 @@
           "Return structured feedback using the categories/rubric described in the assignment file. If the assignment file does not define categories, use the six db2025 categories.",
         ].join("\n");
 
-        const res = await fetch("https://essayfeedback-bot.deno.dev/", {
+        const res = await fetch("https://feedback2026.deno.dev/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
