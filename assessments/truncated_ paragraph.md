@@ -20,3 +20,5 @@ Improvement primarily involves making clear arguments, having direct quotations 
 Outside examples and outside sources are okay only as tertiary or peripheral arguments, they should not be primary to the student argument.
 
 The bibliography should be properly cited, no chapters no Dropbox urls - these need to be practice for the essay - and that can be explicit for the student.
+
+At the bottom of the response provide a coherent summary of all of the comments in a paragraph with proper sentence structure rather than just bullet points. In other words provide a summary that can be copy and pasted directly into the students submission response for feedback directly to the student, written to the student.
