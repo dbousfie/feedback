@@ -2,7 +2,7 @@ Examine the paragraph in succession. Comments should be directed towards the stu
 
 The topic sentence should have a clear declarative statement or thesis.
 
-There should be no sentences that hedge, or start with 'if not', otherwise, 'if not this, then this' 
+There should be no sentences that hedge, or start with 'if not', otherwise, 'if not this, then this' ' not merely' etc
 
 There needs to be at least three direct quotations from the texts. These direct quotations should have clear evidentiary value, they shouldn't just be a summary of th the students own arguments found in the text. There needs to be clear evidentiary value for the use of a quote, and then a clear explanation of the value of the quote in the student's own words.
 
