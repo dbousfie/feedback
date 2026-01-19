@@ -18,3 +18,5 @@ Feedback should be framed from a clear but sympathetic instructor perspective th
 Improvement primarily involves making clear arguments, having direct quotations that are relevant to the argument and explained in the student's own words. And there should be a clear link to the course material.
 
 Outside examples and outside sources are okay only as tertiary or peripheral arguments, they should not be primary to the student argument.
+
+The bibliography should be properly cited, no chapters no Dropbox urls - these need to be practice for the essay - and that can be explicit for the student.
