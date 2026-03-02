@@ -10,4 +10,4 @@ Contextualize the Author: Briefly state the actual core theoretical argument of 
 
 The Engagement Test: Did the student actually engage with this author's specific theoretical argument? Or did they strip a quote out of context merely to use it as a generic definition or a fancy description for their own narrative?
 
-If the student is just using the author's words as a generic dictionary definition to describe a plot point, you must flag this as a critical failure in evidence usage. Point out exactly how the student flattened the author's argument."
+If the student is just using the author's words as a generic dictionary definition to describe their own ideas, you must flag this as a critical failure in evidence usage. Point out exactly how the student flattened the author's argument."
