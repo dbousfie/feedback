@@ -1412,6 +1412,250 @@ A: the group work can be completed anytime during the week but must be submitted
 Q: What are the CELs offered this semester?
 A: we do not currently know if we have any CEL placements, Dan will update everyone as soon as he knows
 
+Q: what should I do if I miss a quiz?
+A: if you miss a quiz you can do an additional 250 word response and it will count for the 15%
+
+Q: what should I do if I miss a group work?
+A: if you miss a group work you can do an additional 250 word response and it will count for the 15%
+
+Q:when is the final exam?
+A: the final exam is a take-home exam held during the exam. There is already a sign up sheet available and a sample of the study guide at the bottom of the Google sheet, check the tabs at the bottom of the Google sheet
+
+Q: who is the reading impact of westphalia by - i need to cite it
+A: any course readings that are not explicitly cited or called course readings with a title will come from the reference text: Gerhard von Glahn , James Larry Taulbee 'Law Among Nations' Ninth Edition, 2009.
+
+Q: I don't really understand how the weekly responses are graded
+A: this is an exchange with a student about it
+
+'We need to demonstrate improvement. I have some students that I am providing consistent feedback that is being ignored week to week.
+
+ I'm trying to focus on improvement, the benefit of calculating at the end of the course is that we can make an argument for consistent improvement from week to week, or over the course in its entirety.
+
+So I'm providing feedback each week to try and provide the foundation for that improvement.
+
+The real issue is people trying to game the system. Some people wanted assurance of a 90 each week, but then they would lock me in with that assessment as some kind of baseline and persistently ignore my comments, ignore feedback and continue to produce the same responses each week.
+
+The only way to prevent that is to have the base of 70, and demonstrate consistent approvement throughout the course. At the end of the course if you can demonstrate improvement you can certainly make the argument that you've been getting at least an 80 each week if not higher, and that you've demonstrated improvement and that is indicated on my weekly responses.
+
+I tend to be very precise and focused in my responses at the beginning of the course but as you can see in the sample, by the end of the course I'm largely just saying 'ok' which is in the 90-100 range.
+
+Once we have the structure down, everything should be good to go - I will mostly provide feedback on ideas rather than structure or citation or Scare quotes or things like that for the first 6 weeks - and because my marking increases near the back end of the course, once we have that structure in place everything will shift to 'ok'.
+
+The paragraph requirements are the same for the essay and the exam so getting them right in the paragraphs is a good foundation for all of the other grading in the course. I would say the single biggest factor impacting essay and exam grades was the lack of either citation or paragraph structure.'
+
+This message was sent to students on March 18th
+
+Hi all
+
+Just a few reminders about essays.
+
+1\. The topic needs to be approved and on the list, and [you have a
+specific question that you have to answer
+here](https://docs.google.com/spreadsheets/d/1NOUB0_EfYskpo9QicrnfGZV-LSAehLxdOt8cOLA1yXg/edit?gid=1611888004#gid=1611888004&range=C2).
+
+There is [also a relevant prompt
+here](https://docs.google.com/spreadsheets/d/1NOUB0_EfYskpo9QicrnfGZV-LSAehLxdOt8cOLA1yXg/edit?gid=1611888004#gid=1611888004&range=I2),
+but some people seem to be confused. All of your analytical sources need
+to be from peer-reviewed academic journals or books  like those
+available on Google Scholar. The ICJ cases are only relevant to the
+extent to which you can find them in academic sources. **YOU CANNOT CITE
+CASES DIRECTLY. **We are not lawyers, you are not allowed to do any
+primary research, and we are not qualified to look directly at cases,
+laws or resolutions.** The casenotes legal brief is not an academic
+source**. Instead take relevant ICJ cases and use Google Scholar to
+search your topic + the relevant icj case = good academic sources. So
+for example we would take our issue ie. \'drones\' + Nicaragua ICJ 
+\--\> [find academic
+sources](https://scholar.google.ca/scholar?hl=en&as_sdt=0%2C5&q=drones+Nicaragua+icj+International+court+of+justice&btnG=).
+
+2\. Everyone has one *revise-and-resubmit* as long as the essay is
+submitted by the deadline. I use a first-in-first-out system, and you
+have until the date YOU write the exam to provide your revisions. [There
+are specific revise and resubmit instructions available
+here.](https://westernu.brightspace.com/d2l/le/lessons/157561/topics/3738927)
+
+3\. Also remember that the mandatory [paragraph
+requirements](https://uwoca-my.sharepoint.com/:w:/g/personal/dbousfie_uwo_ca/IQCSDIbRmDNGRrjQkvnRC5EsARpzsEaztQZ1mCHDXkri4Vc?e=Q8lrYf) from
+the course outline are specifically designed to make them resistant to
+generating essays. Additionally as I have maintained throughout the
+course. **I do not want to see scare quotes in your essays or on the
+exams, replace them with italics or bolding. **I am increasingly
+inclined to make all quotations directly from a text be a minimum of two
+lines. This is because most AI bots are restricted from using more than
+15 words directly from any text for copyright reasons. That\'s why
+we\'ve seen a proliferation of Frankenquotes. Please remember that I
+will be checking all of your page numbers, for all of your citations and
+reviewing the cited text. It takes forever but it\'s the only way to be
+sure, I will look at the page and make sure that the citation isn\'t
+hallucinated.** You must have direct quotes and page numbers for all
+citations.**
+
+Please reach out if you have any questions or concerns I have bonus
+office hours tomorrow from 1:00 till 2:00 p.m. On Zoom.
+
+Best, Dan
+
+Message sent to student on March 18th
+
+Yes, I will be sending out an extension notification about 1 to 2 days before the essay is due. I wait until the last minute to allow people to get started on the essay, if they are notified too early they won't start.
+
+I always ask for the essay extension in writing over email with a new expected submission date.
+
+I still continue to mark on a first in first out basis, and students with extensions are not guaranteed to get them back in time to revise and resubmit. All essays are due before you write your exam.
+
+Let me know if you have any other questions, Dan
+
+Hi Professor,
+
+In the message you just sent about our essays, you say that "Everyone has one revise-and-resubmit as long as the essay is submitted by the deadline... you have until the date YOU write the exam to provide your revisions."
+
+What if we are not doing the exam because we did the written responses? When are we expected to provide our revisions and resubmit?
+
+Thanks,
+Student
+
+
+​
+​
+Hi student
+
+That's a good question. Realistically, you should try to get it in as soon as you can, but practically it just needs to be in near the end of the exam slots that I have listed. Let's say April 25th?
+
+Best, Dan
+
+ 
+Hi all,
+
+Just a few reminders about the essay.
+
+This is a political science course about international law, every year
+we have a problem in the framing of the essay. In previous years it was
+that students wrote too much like political science and didn\'t engage
+with the debate cases that everyone does each week. To address that I
+focused on those cases with the inevitable problem that you aren\'t
+making arguments.
+
+This is a political science course, you need to have a coherent
+framework to explain what\'s happening in your topic. This requires
+additional academic sources, you should be primarily getting through
+Google Scholar. I do have a backup list of sources that students used in
+the past I wasn\'t sure if I would use it anymore because they\'re
+getting a bit old, but it\'s certainly helpful if you haven\'t found any
+sources yet. [The list is
+here](https://finallystudying.ca/wiki/index.php/3201essays).
+
+Remember that we have paragraph requirements, and that in general it\'s
+advised to use **direct quotations that are longer than two lines**,
+otherwise you risk creating \'Frankenquotes\' where you effectively
+ignore the evidentiary value of the author and instead use the text to
+reinforce a point you were already going to make. It\'s quite common
+when you generate papers with AI. AI also loves to avoid nouns (people,
+places and things) so specificity is important.
+
+Remember that if you need an extension you just need to email me with
+the new expected submission date, and I will reply with \'sure, no
+problem\'; these should be realistic dates, the deadline is tonight at
+midnight nothing about the extension changes that, and you shouldn\'t be
+submitting into the exam period.\
+\
+Remember the [revise and resubmit instructions are
+here](https://westernu.brightspace.com/d2l/le/lessons/157561/topics/3738927),
+I use a first in first-out system, I also have a [updated essay queue
+here](https://westernu.brightspace.com/d2l/le/lessons/157561/topics/3742034),
+so you can see how many people are in front of you. In general if you
+have your paper in before the beginning of the exam period you should
+still be able to get a revise and resubmit in before you write the exam.
+
+You [need to sign up for the take home exam, I will be locking the sign
+up page because I need to put all of the exams in the queue, please sign
+up
+ASAP](https://docs.google.com/spreadsheets/d/1NOUB0_EfYskpo9QicrnfGZV-LSAehLxdOt8cOLA1yXg/edit?gid=1516506818#gid=1516506818&range=A1).
+
+Please reach out if you have any questions or concerns,
+
+Dan
+
+Hi all,
+
+I\'m working through the essays and I have some substantive concerns.
+
+I feel like most people did not review [the sample papers available
+here](https://docs.google.com/spreadsheets/d/1NOUB0_EfYskpo9QicrnfGZV-LSAehLxdOt8cOLA1yXg/edit?gid=743044020#gid=743044020&range=A1).
+If you do you would realise that the ICJ cases are just a minimal
+requirement to understand the idea of state obligation, they are not
+relevant to the argument of the paper. ICJ cases are just references to
+state obligation and that\'s it. As I have said frequently ***what
+states do and what states say*** constitutes customary international law
+so your paper should be about what states do and what states say (state
+obligation in specific historical circumstances).
+
+You are answering the question in terms of the specific events,
+instances, people and places that provide clear evidence of what states
+do and how they do it. **This is a political science course** so you
+need history, you need specific states and what they\'ve done, and
+specific instances and actors (nouns) as required by the course outline.
+Very few if any of the questions ask you to assess international law in
+general, and ***no question will ever ask you to assess the efficacy of
+international law.*** It has nothing to do with the way this course is
+framed. If you are using words like \'loopholes\', \'contradictions\' or
+\'paradoxes\' you are going to be missing the point of the exercise.
+Moreover the pervasive use of negative language is common in chatbots
+when they don\'t have a clear argument driving their responses. I set up
+a tool that can [check your paragraphs to see if they have largely been
+framed in the
+negative](https://docs.google.com/spreadsheets/d/1NOUB0_EfYskpo9QicrnfGZV-LSAehLxdOt8cOLA1yXg/edit?gid=2074768927#gid=2074768927&range=A18)
+and therefore lack clear declarative sentences that are the foundation
+of a good argument.
+
+Next the paragraph requirements exist for a reason. You need to have
+topic sentences in your own voice. As I have mentioned in the course
+outline, I don\'t think there should be any citations in an introductory
+paragraph; it should outline your arguments, map the argument for the
+reader and avoid description as much as possible. [If you want a tool to
+check that I\'ve got one
+here.](https://docs.google.com/spreadsheets/d/1NOUB0_EfYskpo9QicrnfGZV-LSAehLxdOt8cOLA1yXg/edit?gid=2074768927#gid=2074768927&range=A19)
+I created these tools this week because **the requirements the tools
+check are already explicitly in the course outline.** You\'re not
+allowed to paraphrase. You aren\'t allowed to refer to primary documents
+such as UN Security Council decisions, resolutions or the ICJ cases
+themselves because they are not academic sources. This will be the
+requirements for the exam as well:
+
+***Citation guidelines for the final exam: Follow the paragraph
+structure in the course outline. No hedging or noncommittal conditionals
+(\"if X then Y,\" \"it could be argued\"). No scare quotes. No ellipses
+in quotations --- all quoted passages must be reproduced in full.
+Quotations must capture the author\'s argument or analysis, not just
+facts that match your point. Don\'t summarize sources --- engage with
+them. Questions or concerns? Contact Dan.***
+
+You also need to engage with the ideas of our course, in the essay and
+the exam. The ideas from this course matter and they should be reflected
+in your essay.
+
+Everyone has one revise and resubmit [so long as they follow the
+requirements that are
+here](https://westernu.brightspace.com/d2l/le/lessons/157561/topics/3738927).
+The grade can only increase if you follow the requirements. If you
+don\'t I can assign any grade. Students who submitted on time are
+guaranteed to receive their first draft back before they write the exam,
+but everyone else will have to see how busy the essay queue is. [You can
+track the essay queue
+here. ](https://westernu.brightspace.com/d2l/le/lessons/157561/topics/3742034)I\'m
+a little concerned that people didn\'t reach out to talk to me before
+submitting the paper, it\'s always a good idea to review your
+assignments during office hours if you can. 
+
+Sorry for the long message, reach out if you have any questions.
+
+Dan
+
+
+
+
+
+
+ 
 
 
 
