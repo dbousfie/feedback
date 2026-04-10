@@ -1,4 +1,4 @@
-<!-- index.html (full file, no hardcoded “essay/paragraph” — everything comes from syllabus + assessment files) -->
+<!-- index.html (FIXED VERSION) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +43,7 @@
   <p id="contentStatus" style="margin-top: 0.5rem; color: #4F2683;"></p>
   <p class="muted">
     This page sends only three things to the server: the comments, the submission text, and the selected syllabus + assignment file contents.
-      </p>
+  </p>
 
   <hr />
 
@@ -91,7 +91,6 @@
       sampleFeedbackFile: "sample_feedback.md",
     };
 
-    // Works on any host. Change these if your repo name/owner changes.
     const DEFAULT_GITHUB = { owner: "dbousfie", repo: "feedback", branch: "main" };
 
     const inferGitHubConfig = () => {
@@ -104,7 +103,6 @@
       const host = window.location.hostname;
       const pathParts = window.location.pathname.split("/").filter(Boolean);
 
-      // Pattern: https://OWNER.github.io/REPO/
       if (host.endsWith(".github.io")) {
         const inferredOwner = host.replace(".github.io", "");
         const inferredRepo = pathParts.length > 0 ? pathParts[0] : `${inferredOwner}.github.io`;
@@ -180,8 +178,8 @@
       );
     };
 
-    let syllabusUrlByCourse = new Map(); // courseCode -> download_url
-    let assessmentUrlByName = new Map(); // fileBaseName -> download_url
+    let syllabusUrlByCourse = new Map();
+    let assessmentUrlByName = new Map();
 
     const loadOptions = async () => {
       setStatus(`Loading from ${github.owner}/${github.repo} (${github.branch})...`);
@@ -196,7 +194,6 @@
 
       syllabusUrlByCourse = new Map();
       const courseOptions = syllabi.map((item) => {
-        // expects: 3201syllabus.md
         const course = item.name.replace(/syllabus\.md$/i, "");
         syllabusUrlByCourse.set(course, item.download_url);
         return { value: course, label: course };
@@ -204,7 +201,6 @@
 
       assessmentUrlByName = new Map();
       const assessmentOptions = assessments.map((item) => {
-        // expects: 3201.md, media_analysis.md, etc.
         const base = item.name.replace(/\.md$/i, "");
         assessmentUrlByName.set(base, item.download_url);
         return { value: base, label: base };
@@ -225,8 +221,8 @@
       e.preventDefault();
       responseBox.textContent = "Loading...";
 
-      const reviewerComments = document.getElementById("instructor").value || "";
-      const submissionText = document.getElementById("submission").value || "";
+      const reviewerComments = document.getElementById("instructor").value.trim();
+      const submissionText = document.getElementById("submission").value.trim();
 
       const course = courseSelect.value;
       const assignmentKey = assessmentSelect.value;
@@ -240,27 +236,45 @@
           assessmentUrl ? fetchText(assessmentUrl) : Promise.resolve(""),
         ]);
 
-        // IMPORTANT: No “essay”, no “paragraph” hardcoded.
-        // The model is instructed to infer what it is from the assignment file.
-     const query = [
-  "db2025",
-  "Output plain text only. If you use bullets, use hyphens like '- ' only. No Markdown headings or bold.",
+        // -------------------------------------------------------
+        // Build the query with clear structure and hierarchy.
+        // db2025 must immediately precede instructor comments
+        // because assessment files expect "everything after db2025
+        // is the instructor's evaluative framework."
+        // -------------------------------------------------------
+        const queryParts = [];
 
-          "Use ONLY the syllabus and assignment text below to decide what kind of submission this is and how to evaluate it.",
-          "Do not assume it is an essay unless the assignment says it is an essay.",
-        "Do NOT include any grades, scores, percentages, points, or numeric evaluation anywhere.",
-      "Do NOT write 'Grade:' or 'Score:' or any numbers meant as evaluation.",
-      "Match the format required by the ASSIGNMENT file. If it requires short margin notes, do that. If it requires substantive engagement, do that.",
+        // Only include reviewer comments section if there are comments
+        if (reviewerComments) {
+          queryParts.push(
+            "db2025",
+            "",
+            reviewerComments,
+            "",
+            "The comments above are from the course instructor. They are the definitive assessment. Reinforce them, do not contradict them, do not soften them.",
+            "",
+            "CRITICAL — HOW TO WRITE YOUR RESPONSE:",
+            "1. Write AS the instructor, directly TO the student in second person ('you', 'your paper'). NEVER write 'the instructor flagged', 'the instructor's guidance', 'the instructor noted', or any third-person framing. The student will read this as if the instructor wrote it. Third-person framing is broken output.",
+            "2. Do NOT paraphrase the instructor's comments back. The instructor's comments are your guide — the student will see them separately. Your job is to APPLY those comments to the specific text of the submission below.",
+            "3. For every criticism, quote a short phrase from the STUDENT'S submission (not from the instructor's comments) and point at exactly where the problem is. Example: 'Your topic sentence in the Legal Reinterpretation paragraph reads \"Since the start of the current crisis...\" — this opens with description, not a clear argument in your voice.'",
+            "4. If the instructor identified a category of problem (scare quotes, missing topic sentences, lack of examples, single-source reliance), find EVERY instance of that problem in the submission and list them with short student quotes.",
+          );
+        } else {
+          queryParts.push(
+            "Evaluate the submission independently against the assignment requirements and syllabus criteria.",
+            "",
+            "Write directly to the student in second person ('you', 'your paper'). Never refer to 'the instructor' in third person. Quote specific phrases from the student's submission when making criticisms.",
+          );
+        }
 
+        queryParts.push(
           "",
-          "Reviewer Comments (authoritative):",
-          reviewerComments,
-          "",
-          "Student Submission (as provided):",
-          submissionText,
-          "",
-          "Return structured feedback using the categories/rubric described in the assignment file. If the assignment file does not define categories, use the six db2025 categories.",
-        ].join("\n");
+          "=== STUDENT SUBMISSION ===",
+          submissionText || "[No submission text provided]",
+          "=== END SUBMISSION ===",
+        );
+
+        const query = queryParts.join("\n");
 
         const res = await fetch("https://feedback2026.deno.dev/", {
           method: "POST",
